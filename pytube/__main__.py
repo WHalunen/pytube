@@ -11,6 +11,7 @@ from __future__ import absolute_import
 
 import json
 import logging
+import sys
 
 from pytube import Caption
 from pytube import CaptionQuery
@@ -85,7 +86,10 @@ class YouTube(object):
             install_proxy(proxies)
 
         if not defer_prefetch_init:
-            self.prefetch_init()
+            try:
+                self.prefetch_init()
+            except:
+                sys.exit(0)
 
     def prefetch_init(self):
         """Download data, descramble it, and build Stream instances.
@@ -159,7 +163,9 @@ class YouTube(object):
         """
         self.watch_html = request.get(url=self.watch_url)
         if '<img class="icon meh" src="/yts/img' not in self.watch_html:
-            raise VideoUnavailable('This video is unavailable.')
+            print("\nThis has been deleted. Or requires permission to view.")
+            raise VideoUnavailable('This video is unavailable/has been deleted.')
+            #sys.exit(0)
         self.embed_html = request.get(url=self.embed_url)
         self.age_restricted = extract.is_age_restricted(self.watch_html)
         self.vid_info_url = extract.video_info_url(
@@ -168,6 +174,7 @@ class YouTube(object):
             watch_html=self.watch_html,
             embed_html=self.embed_html,
             age_restricted=self.age_restricted,
+
         )
         self.vid_info = request.get(self.vid_info_url)
         if not self.age_restricted:
