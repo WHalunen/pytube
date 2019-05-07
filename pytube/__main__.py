@@ -280,6 +280,8 @@ class YouTube(object):
         :rtype: str
 
         """
+
+
         return self.player_config_args['length_seconds']
 
     @property
