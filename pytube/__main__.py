@@ -164,8 +164,7 @@ class YouTube(object):
         self.watch_html = request.get(url=self.watch_url)
         if '<img class="icon meh" src="/yts/img' not in self.watch_html:
             print("\nThis has been deleted. Or requires permission to view.")
-            raise VideoUnavailable('This video is unavailable/has been deleted.')
-            #sys.exit(0)
+
         self.embed_html = request.get(url=self.embed_url)
         self.age_restricted = extract.is_age_restricted(self.watch_html)
         self.vid_info_url = extract.video_info_url(
