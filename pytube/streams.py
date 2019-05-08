@@ -15,7 +15,6 @@ import os
 import pprint
 import time
 import sys
-import progressbar
 
 from pytube import extract
 from pytube import request
@@ -24,6 +23,7 @@ from pytube.itags import get_format_profile
 
 
 logger = logging.getLogger(__name__)
+
 
 
 class Stream(object):
@@ -224,7 +224,6 @@ class Stream(object):
 
         )
 
-
         with open(fp, 'wb') as fh:
             temp = 1
             print("----------------PROGRESS-BAR----------------")
@@ -234,9 +233,6 @@ class Stream(object):
                 bytes_remaining -= len(chunk)
                 percent = (bytes_remaining / self.filesize) * 100
                 bar = round(percent)
-
-
-
 
                 if bar == 100 and temp == 1:
                     print("▬▬▬▬▬", end="")
