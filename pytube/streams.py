@@ -223,38 +223,37 @@ class Stream(object):
             self.filesize, fp,
 
         )
+        if not isfile(fp):
+            with open(fp, 'wb') as fh:
+                temp = 1
+                print("----------------PROGRESS-BAR----------------")
+                print("[0%]  |  [25%]  |  [50%]  |  [75%]  |  [100%]")
+                for chunk in request.get(self.url, streaming=True):
+                    # reduce the (bytes) remainder by the length of the chunk.
+                    bytes_remaining -= len(chunk)
+                    percent = (bytes_remaining / self.filesize) * 100
+                    bar = round(percent)
 
-        with open(fp, 'wb') as fh:
-            temp = 1
-            print("----------------PROGRESS-BAR----------------")
-            print("[0%]  |  [25%]  |  [50%]  |  [75%]  |  [100%]")
-            for chunk in request.get(self.url, streaming=True):
-                # reduce the (bytes) remainder by the length of the chunk.
-                bytes_remaining -= len(chunk)
-                percent = (bytes_remaining / self.filesize) * 100
-                bar = round(percent)
-
-                if bar == 100 and temp == 1:
-                    print("▬▬▬▬▬", end="")
-                    temp += 1
-                if bar == 75 and temp == 2:
-                    print("▬▬▬▬▬", end="")
-                    temp += 1
-                if bar == 50 and temp == 3:
-                    print("▬▬▬▬▬", end="")
-                    temp += 1
-                if bar == 25 and temp == 4:
-                    print("▬▬▬▬▬", end="")
-                    temp += 1
-                if bar == 0 and temp == 5:
-                    print("▬▬▬▬▬▬", end="")
-                    temp += 1
+                    if bar == 100 and temp == 1:
+                        print("▬▬▬▬▬", end="")
+                        temp += 1
+                    if bar == 75 and temp == 2:
+                        print("▬▬▬▬▬", end="")
+                        temp += 1
+                    if bar == 50 and temp == 3:
+                        print("▬▬▬▬▬", end="")
+                        temp += 1
+                    if bar == 25 and temp == 4:
+                        print("▬▬▬▬▬", end="")
+                        temp += 1
+                    if bar == 0 and temp == 5:
+                        print("▬▬▬▬▬▬", end="")
+                        temp += 1
 
 
-
-                # send to the on_progress callback.
-                self.on_progress(chunk, fh, bytes_remaining)
-        self.on_complete(fh)
+                    # send to the on_progress callback.
+                    self.on_progress(chunk, fh, bytes_remaining)
+                    self.on_complete(fh)
 
 
         return fp
