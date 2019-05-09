@@ -20,6 +20,7 @@ from pytube import extract
 from pytube import request
 from pytube.helpers import safe_filename
 from pytube.itags import get_format_profile
+from os.path import isfile
 
 
 logger = logging.getLogger(__name__)
@@ -255,7 +256,8 @@ class Stream(object):
                     self.on_progress(chunk, fh, bytes_remaining)
                     self.on_complete(fh)
 
-
+        else:
+            print("error: file already exists")
         return fp
 
     def stream_to_buffer(self):
